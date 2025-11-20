@@ -1,0 +1,7 @@
+import type { IClock } from "../../domain/services/IClock";
+
+export class SystemClock implements IClock {
+    now(): Date {
+        return new Date();
+    }
+}
