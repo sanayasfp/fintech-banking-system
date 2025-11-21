@@ -1,10 +1,12 @@
 import { Type } from '@sinclair/typebox';
+import { UlidType } from '../types/ulid.types';
+import { CursorPaginatedResultSchema } from './pagination.schema';
 
 export const createAccountSchema = {
     tags: ['accounts'],
     description: 'Create a new bank account',
     body: Type.Object({
-        userId: Type.String({ format: 'uuid' }),
+        userId: UlidType(),
         accountNumber: Type.String({ minLength: 10, maxLength: 20 }),
         initialBalance: Type.Optional(
             Type.Number({ minimum: 0, description: 'Initial balance in cents' }),
@@ -12,7 +14,7 @@ export const createAccountSchema = {
     }),
     response: {
         201: Type.Object({
-            accountId: Type.String({ format: 'uuid' }),
+            accountId: UlidType(),
             success: Type.Boolean(),
         }),
     },
@@ -22,7 +24,7 @@ export const depositSchema = {
     tags: ['accounts'],
     description: 'Deposit money into an account',
     params: Type.Object({
-        id: Type.String({ format: 'uuid' }),
+        id: UlidType(),
     }),
     body: Type.Object({
         amount: Type.Number({ minimum: 0.01, description: 'Amount in cents' }),
@@ -39,7 +41,7 @@ export const withdrawSchema = {
     tags: ['accounts'],
     description: 'Withdraw money from an account',
     params: Type.Object({
-        id: Type.String({ format: 'uuid' }),
+        id: UlidType(),
     }),
     body: Type.Object({
         amount: Type.Number({ minimum: 0.01, description: 'Amount in cents' }),
@@ -56,7 +58,7 @@ export const getBalanceSchema = {
     tags: ['accounts'],
     description: 'Get account balance',
     params: Type.Object({
-        id: Type.String({ format: 'uuid' }),
+        id: UlidType(),
     }),
     response: {
         200: Type.Object({
@@ -70,16 +72,17 @@ export const getBalanceSchema = {
 export const listAccountsSchema = {
     tags: ['accounts'],
     description: 'List all accounts for current user',
+    querystring: Type.Object({
+        limit: Type.Optional(Type.Integer({ minimum: 1, maximum: 100, default: 20 })),
+        cursor: Type.Optional(Type.String()),
+    }),
     response: {
-        200: Type.Object({
-            accounts: Type.Array(
-                Type.Object({
-                    accountId: Type.String(),
-                    accountNumber: Type.String(),
-                    balance: Type.Number(),
-                }),
-            ),
-        }),
+        200: CursorPaginatedResultSchema(
+            Type.Object({
+                accountId: Type.String(),
+                accountNumber: Type.String(),
+                balance: Type.Number(),
+            })),
     },
 } as const;
 
@@ -87,7 +90,7 @@ export const closeAccountSchema = {
     tags: ['accounts'],
     description: 'Close an account',
     params: Type.Object({
-        id: Type.String({ format: 'uuid' }),
+        id: UlidType(),
     }),
     response: {
         204: Type.Null(),

@@ -1,5 +1,5 @@
-import type { BankAccount } from "../../domain/entities/BankAccount";
-import { Transaction } from "../../domain/value-objects/Transaction";
+import type { BankAccount } from "./BankAccount";
+import { Transaction } from "../value-objects/Transaction";
 import type { IStatementPrinter } from "../../presentation/printers/IStatementPrinter";
 import { InsufficientFundsError } from "../errors/InsufficientFundsError";
 import { InvalidAmountError } from "../errors/InvalidAmountError";
@@ -7,7 +7,7 @@ import type { IAccountRepository } from "../repositories/IAccountRepository";
 import type { IClock } from "../services/IClock";
 import type { Money } from "../value-objects/Money";
 
-export class BankAccountImpl implements BankAccount {
+export class BankAccountPrototype implements BankAccount {
     constructor(
         private readonly repository: IAccountRepository,
         private readonly clock: IClock,

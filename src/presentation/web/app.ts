@@ -7,11 +7,19 @@ import sensible from '@fastify/sensible';
 import swagger from '@fastify/swagger';
 import swaggerUI from '@fastify/swagger-ui';
 import { type TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
-import Fastify from 'fastify';
+import Ajv, { type ErrorObject } from 'ajv';
+import Fastify, { type FastifySchema } from 'fastify';
 import { envSchema, envToLogger } from './config';
-import { registerDependencies } from './core/di-container.ts';
+import { dateFormat, dateTimeFormat } from './types/date.types';
+import { emailFormat } from './types/email.types';
+import { phoneFormat } from './types/phone.types';
+import { ulidFormat } from './types/ulid.types';
+import { registerCustomFormats } from './utils/formatValidator';
+import { registerDependencies } from './core/di-container';
 import { accountRoutes } from './routes/accounts';
+import { authRoutes } from './routes/auth';
 import { statementRoutes } from './routes/statements';
+import { errorHandler } from './middleware/errorHandler';
 
 export const buildApp = async () => {
     const app = Fastify({
@@ -24,6 +32,23 @@ export const buildApp = async () => {
             },
         },
     }).withTypeProvider<TypeBoxTypeProvider>();
+
+    app.setValidatorCompiler(({ schema }: { schema: FastifySchema }) => {
+        const ajv = new Ajv();
+
+        registerCustomFormats(ajv, [ulidFormat, dateFormat, dateTimeFormat, emailFormat, phoneFormat]);
+
+        const validate = ajv.compile(schema);
+
+        return (data: unknown) => {
+            const valid = validate(data);
+            if (valid) {
+                return { value: data };
+            } else {
+                return { value: data, error: validate.errors as ErrorObject[] };
+            }
+        };
+    });
 
     await app.register(fastifyEnv, {
         confKey: 'config',
@@ -62,6 +87,8 @@ export const buildApp = async () => {
 
     await app.register(sensible);
 
+    app.setErrorHandler(errorHandler);
+
     await app.register(swagger, {
         openapi: {
             info: {
@@ -80,6 +107,16 @@ export const buildApp = async () => {
                 { name: 'statements', description: 'Statement generation endpoints' },
                 { name: 'health', description: 'Health check endpoints' },
             ],
+            components: {
+                securitySchemes: {
+                    bearerAuth: {
+                        type: 'http',
+                        scheme: 'bearer',
+                        bearerFormat: 'JWT',
+                    }
+                }
+            },
+            security: [{ bearerAuth: [] }],
         },
     });
 
@@ -112,6 +149,7 @@ export const buildApp = async () => {
         };
     });
 
+    await app.register(authRoutes, { prefix: '/api/v1' });
     await app.register(accountRoutes, { prefix: '/api/v1' });
     await app.register(statementRoutes, { prefix: '/api/v1' });
 

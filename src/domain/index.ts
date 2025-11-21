@@ -1,4 +1,4 @@
-export * from "./entities/IAccount";
+export * from "./entities/IAccountAggregate";
 export * from "./entities/IUser";
 export * from "./repositories/IAccountRepository";
 export * from "./repositories/ITransactionQueryRepository";

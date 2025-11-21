@@ -1,7 +1,7 @@
-import { BankAccountImpl } from "../domain/entities/BankAccountImpl";
+import { BankAccountPrototype } from "../domain/entities/BankAccountPrototype";
 import { InsufficientFundsError } from "../domain/errors/InsufficientFundsError";
 import { InvalidAmountError } from "../domain/errors/InvalidAmountError";
-import { InMemoryAccountRepository } from "../domain/repositories/AccountRepository";
+import { InMemoryAccountRepository } from "../domain/repositories/InMemoryAccountRepository";
 import { Money } from "../domain/value-objects/Money";
 import { ConsoleStatementPrinter } from "../presentation/printers/ConsoleStatementPrinter";
 import { MockClock } from "./mocks/MockClock";
@@ -10,15 +10,15 @@ describe("BankAccount", () => {
     let repository: InMemoryAccountRepository;
     let clock: MockClock;
     let printer: ConsoleStatementPrinter;
-    let account: BankAccountImpl;
+    let account: BankAccountPrototype;
     let tableSpy: jest.SpyInstance;
 
     beforeEach(() => {
         repository = new InMemoryAccountRepository();
         clock = new MockClock(new Date("2024-01-01"));
         printer = new ConsoleStatementPrinter();
-        account = new BankAccountImpl(repository, clock, printer);
-        tableSpy = jest.spyOn(console, "table").mockImplementation(() => {});
+        account = new BankAccountPrototype(repository, clock, printer);
+        tableSpy = jest.spyOn(console, "table").mockImplementation(() => { });
     });
 
     afterEach(() => {
@@ -250,7 +250,7 @@ describe("BankAccount", () => {
     describe("repository isolation", () => {
         it("should not interfere with other account instances", () => {
             const repository2 = new InMemoryAccountRepository();
-            const account2 = new BankAccountImpl(repository2, clock, printer);
+            const account2 = new BankAccountPrototype(repository2, clock, printer);
 
             account.deposit(Money.from(1000));
             account2.deposit(Money.from(500));
