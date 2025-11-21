@@ -11,15 +11,13 @@ import type { AccountListView, IAccountQueries } from "../queries/IAccountQuerie
 import type { CursorPaginatedResult, CursorPaginationOptions } from "../queries/Pagination";
 import type { IAccountService } from "./IAccountService";
 
-
 export interface AccountServiceDeps {
-    readonly accountRepository: IAccountRepository,
-    readonly accountQueries: IAccountQueries,
-    readonly clock: IClock,
-    readonly authorizationService: IAuthorizationService,
-    readonly printer: IStatementPrinter,
+    readonly accountRepository: IAccountRepository;
+    readonly accountQueries: IAccountQueries;
+    readonly clock: IClock;
+    readonly authorizationService: IAuthorizationService;
+    readonly printer: IStatementPrinter;
 }
-
 
 export class AccountService implements IAccountService {
     private readonly accountRepository: IAccountRepository;
@@ -39,7 +37,7 @@ export class AccountService implements IAccountService {
     public async createAccount(
         userId: string,
         accountNumber: string,
-        initialBalance?: Money
+        initialBalance?: Money,
     ): Promise<IAccountAggregate> {
         await this.authorizationService.canCreateAccount(userId);
 
@@ -62,8 +60,7 @@ export class AccountService implements IAccountService {
         try {
             await this.accountRepository.save(newAccount);
         } catch (error: unknown) {
-            // Handle Prisma unique constraint violation for accountNumber
-            if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
+            if (error && typeof error === "object" && "code" in error && error.code === "P2002") {
                 throw new DuplicateAccountNumberError(accountNumber);
             }
             throw error;
@@ -104,7 +101,10 @@ export class AccountService implements IAccountService {
         return this.accountQueries.getBalance(accountId);
     }
 
-    public async listUserAccounts(userId: string, options: CursorPaginationOptions): Promise<CursorPaginatedResult<AccountListView>> {
+    public async listUserAccounts(
+        userId: string,
+        options: CursorPaginationOptions,
+    ): Promise<CursorPaginatedResult<AccountListView>> {
         return this.accountQueries.listAccountsByUser(userId, options);
     }
 

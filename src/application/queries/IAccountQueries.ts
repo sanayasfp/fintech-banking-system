@@ -14,6 +14,12 @@ export interface AccountListView {
 
 export interface IAccountQueries {
     getBalance(accountId: string): Promise<Money>;
-    getStatement(accountId: string, options: GetStatementOptions): Promise<CursorPaginatedResult<Transaction>>;
-    listAccountsByUser(userId: string, options: CursorPaginationOptions): Promise<CursorPaginatedResult<AccountListView>>;
+    getStatement(
+        accountId: string,
+        options: GetStatementOptions,
+    ): Promise<CursorPaginatedResult<Transaction>>;
+    listAccountsByUser(
+        userId: string,
+        options: CursorPaginationOptions,
+    ): Promise<CursorPaginatedResult<AccountListView>>;
 }

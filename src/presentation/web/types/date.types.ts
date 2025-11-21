@@ -1,8 +1,5 @@
 import type { CustomFormat } from '../utils/formatValidator';
 
-/**
- * Date format validator (YYYY-MM-DD)
- */
 export const dateFormat: CustomFormat = {
     name: 'date',
     validate: (value: string) => {
@@ -14,9 +11,6 @@ export const dateFormat: CustomFormat = {
     },
 };
 
-/**
- * DateTime format validator (ISO 8601)
- */
 export const dateTimeFormat: CustomFormat = {
     name: 'date-time',
     validate: (value: string) => {

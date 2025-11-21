@@ -30,7 +30,7 @@ export class StatementService implements IStatementService {
     public async getStatement(
         accountId: string,
         userId: string,
-        options: GetStatementOptions
+        options: GetStatementOptions,
     ): Promise<CursorPaginatedResult<Transaction>> {
         await this.authorizationService.canAccessAccount(userId, accountId);
         return this.accountQueries.getStatement(accountId, options);
@@ -50,7 +50,7 @@ export class StatementService implements IStatementService {
     public async export(
         accountId: string,
         format: StatementFormat,
-        userId: string
+        userId: string,
     ): Promise<string> {
         await this.authorizationService.canAccessAccount(userId, accountId);
 
@@ -63,27 +63,32 @@ export class StatementService implements IStatementService {
         const transactions = result.items;
 
         switch (format) {
-            case 'json':
-                return JSON.stringify({
-                    accountId,
-                    transactions: transactions.map(tx => ({
-                        date: tx.date.toISOString(),
-                        amount: tx.amount.toFixed(2),
-                        balance: tx.balance.toFixed(2),
-                    })),
-                }, null, 2);
+            case "json":
+                return JSON.stringify(
+                    {
+                        accountId,
+                        transactions: transactions.map((tx) => ({
+                            date: tx.date.toISOString(),
+                            amount: tx.amount.toFixed(2),
+                            balance: tx.balance.toFixed(2),
+                        })),
+                    },
+                    null,
+                    2,
+                );
 
-            case 'csv': {
-                const header = 'Date,Amount,Balance\n';
+            case "csv": {
+                const header = "Date,Amount,Balance\n";
                 const rows = transactions
-                    .map(tx =>
-                        `${tx.date.toISOString()},${tx.amount.toFixed(2)},${tx.balance.toFixed(2)}`
+                    .map(
+                        (tx) =>
+                            `${tx.date.toISOString()},${tx.amount.toFixed(2)},${tx.balance.toFixed(2)}`,
                     )
-                    .join('\n');
+                    .join("\n");
                 return header + rows;
             }
 
-            case 'pdf':
+            case "pdf":
                 return `PDF export not yet implemented for account ${accountId}`;
 
             default:

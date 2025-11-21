@@ -9,7 +9,11 @@ export interface GetStatementOptions extends Partial<CursorPaginationOptions> {
 }
 
 export interface IStatementService {
-    getStatement(accountId: string, userId: string, options: GetStatementOptions): Promise<CursorPaginatedResult<Transaction>>;
+    getStatement(
+        accountId: string,
+        userId: string,
+        options: GetStatementOptions,
+    ): Promise<CursorPaginatedResult<Transaction>>;
     print(accountId: string, userId: string): Promise<void>;
     export(accountId: string, format: StatementFormat, userId: string): Promise<string>;
 }

@@ -23,19 +23,17 @@ export interface IAccountAggregate extends BankAccount {
     close(): void;
 }
 
-
 export interface IAccountFactory {
-    id?: string,
-    userId: string,
-    accountNumber: string,
-    clock: IClock,
-    printer: IStatementPrinter,
-    createdAt?: Date,
-    status?: AccountStatus,
-    transactions?: Transaction[],
-    balance?: Money,
+    id?: string;
+    userId: string;
+    accountNumber: string;
+    clock: IClock;
+    printer: IStatementPrinter;
+    createdAt?: Date;
+    status?: AccountStatus;
+    transactions?: Transaction[];
+    balance?: Money;
 }
-
 
 export interface IAccountFactoryFunc {
     (data: IAccountFactory): IAccountAggregate;

@@ -4,15 +4,6 @@ import type { Controller } from '../controllers/Controller';
 type RequireAllKeys<T, K extends ReadonlyArray<keyof T>> =
     Exclude<keyof T, K[number]> extends never ? K : ['Error: Missing keys', Exclude<keyof T, K[number]>];
 
-/**
- * Factory function to create a controller handler that resolves dependencies
- * from the request scope and instantiates the controller per-request.
- *
- * @param ControllerClass - The controller class to instantiate
- * @param methodName - The method name to call on the controller
- * @param dependencies - Array of dependency names to resolve from DI container (all keys required)
- * @returns A Fastify route handler function
- */
 export function controllerFactory<
     TDeps extends object,
     TController extends Controller<TDeps>,

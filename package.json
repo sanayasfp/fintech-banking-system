@@ -12,6 +12,7 @@
     "start": "node dist/presentation/server.js",
     "dev": "tsx watch src/presentation/server.ts",
     "dev:debug": "tsx watch --inspect src/presentation/server.ts",
+    "prototype": "tsx src/presentation/prototype.ts",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write \"src/**/*.ts\"",

@@ -24,25 +24,16 @@ import { prisma } from './prisma-client';
 
 declare module '@fastify/awilix' {
     interface Cradle {
-        // Infrastructure
         clock: IClock;
         printer: IStatementPrinter;
         prisma: PrismaClient;
-
-        // Repositories & Queries
         accountRepository: IAccountRepository;
         accountQueries: IAccountQueries;
         userRepository: IUserRepository;
-
-        // Domain Services
         authorizationService: IAuthorizationService;
-
-        // Application Services
         accountService: IAccountService;
         authService: IAuthService;
         statementService: IStatementService;
-
-        // Factories
         accountFactory: typeof AccountAggregate.create;
     }
 
@@ -53,7 +44,6 @@ declare module '@fastify/awilix' {
 
 export const registerDependencies = (diContainer: AwilixContainer) => {
     diContainer.register({
-        // Infrastructure
         clock: asClass(SystemClock, {
             lifetime: Lifetime.SINGLETON,
         }),
@@ -61,8 +51,6 @@ export const registerDependencies = (diContainer: AwilixContainer) => {
             lifetime: Lifetime.SINGLETON,
         }),
         prisma: asValue(prisma),
-
-        // Repositories & Queries
         accountRepository: asClass(PrismaAccountRepository, {
             lifetime: Lifetime.SINGLETON,
         }),
@@ -72,13 +60,9 @@ export const registerDependencies = (diContainer: AwilixContainer) => {
         userRepository: asClass(PrismaUserRepository, {
             lifetime: Lifetime.SINGLETON,
         }),
-
-        // Domain Services
         authorizationService: asClass(AuthorizationService, {
             lifetime: Lifetime.SINGLETON,
         }),
-
-        // Application Services
         accountService: asClass(AccountService, {
             lifetime: Lifetime.SINGLETON,
         }),
@@ -88,7 +72,6 @@ export const registerDependencies = (diContainer: AwilixContainer) => {
         statementService: asClass(StatementService, {
             lifetime: Lifetime.SINGLETON,
         }),
-
         accountFactory: asValue(AccountAggregate.create),
     });
 };

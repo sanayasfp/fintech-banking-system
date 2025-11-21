@@ -18,7 +18,7 @@ describe("BankAccount", () => {
         clock = new MockClock(new Date("2024-01-01"));
         printer = new ConsoleStatementPrinter();
         account = new BankAccountPrototype(repository, clock, printer);
-        tableSpy = jest.spyOn(console, "table").mockImplementation(() => { });
+        tableSpy = jest.spyOn(console, "table").mockImplementation(() => {});
     });
 
     afterEach(() => {
@@ -182,7 +182,6 @@ describe("BankAccount", () => {
             const transactions = repository.getAllTransactions();
             const firstTransaction = transactions[0]!;
 
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             expect(() => ((firstTransaction as any).amount = Money.from(500))).toThrow();
         });
 

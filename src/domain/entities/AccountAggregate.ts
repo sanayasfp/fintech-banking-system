@@ -47,9 +47,6 @@ export class AccountAggregate implements IAccountAggregate {
         this.printer = props.printer;
     }
 
-    /**
-     * Crée une instance pour un NOUVEAU compte bancaire.
-     */
     public static create(data: IAccountFactory): IAccountAggregate {
         return new AccountAggregate({
             id: data.id ?? ulid(),
