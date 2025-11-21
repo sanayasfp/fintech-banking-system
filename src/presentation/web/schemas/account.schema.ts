@@ -1,6 +1,6 @@
 import { Type } from '@sinclair/typebox';
 import { UlidType } from '../types/ulid.types';
-import { CursorPaginatedResultSchema } from './pagination.schema';
+import { CursorPaginatedResultSchema, PaginationLimitSchema } from './pagination.schema';
 
 export const createAccountSchema = {
     tags: ['accounts'],
@@ -73,7 +73,7 @@ export const listAccountsSchema = {
     tags: ['accounts'],
     description: 'List all accounts for current user',
     querystring: Type.Object({
-        limit: Type.Optional(Type.Integer({ minimum: 1, maximum: 100, default: 20 })),
+        limit: PaginationLimitSchema(),
         cursor: Type.Optional(Type.String()),
     }),
     response: {

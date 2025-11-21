@@ -1,10 +1,9 @@
-import type { FastifyReply, FastifyRequest, HookHandlerDoneFunction } from 'fastify';
+import type { FastifyReply, FastifyRequest } from 'fastify';
 import { UnauthorizedError } from '../../../application/errors/UnauthorizedError';
 
 export async function authMiddleware(
     request: FastifyRequest,
-    reply: FastifyReply,
-    done: HookHandlerDoneFunction
+    _reply: FastifyReply
 ): Promise<void> {
     try {
         const authHeader = request.headers.authorization;
@@ -27,9 +26,8 @@ export async function authMiddleware(
                 resolve: () => token,
             },
         });
-
-        done();
-    } catch {
+    } catch (error) {
+        request.log.error(error);
         throw new UnauthorizedError("Authentication failed");
     }
 }

@@ -30,7 +30,7 @@ export class StatementController extends Controller<StatementControllerDeps> {
         }
 
         const options: GetStatementOptions = {
-            limit: query.limit || 50,
+            limit: Number(query.limit) || 50,
             ...(query.cursor && { cursor: query.cursor }),
             ...(query.startDate && { startDate: new Date(query.startDate) }),
             ...(query.endDate && { endDate: new Date(query.endDate) }),
@@ -83,7 +83,8 @@ export class StatementController extends Controller<StatementControllerDeps> {
 
         reply
             .header('Content-Type', contentTypes[format])
-            .header('Content-Disposition', `attachment; filename="statement-${id}.${format}"`)
-            .send(exported);
+            .header('Content-Disposition', `attachment; filename="statement-${id}.${format}"`);
+        
+        return exported;
     }
 }

@@ -82,7 +82,6 @@ export class AccountService implements IAccountService {
         }
 
         account.deposit(amount);
-
         await this.accountRepository.save(account);
     }
 
@@ -96,7 +95,6 @@ export class AccountService implements IAccountService {
         }
 
         account.withdraw(amount);
-
         await this.accountRepository.save(account);
     }
 

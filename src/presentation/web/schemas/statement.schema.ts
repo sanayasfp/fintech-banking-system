@@ -1,5 +1,6 @@
 import { Type } from '@sinclair/typebox';
 import { UlidType } from '../types/ulid.types';
+import { PaginationLimitSchema } from './pagination.schema';
 
 export const getStatementSchema = {
     tags: ['statements'],
@@ -10,7 +11,7 @@ export const getStatementSchema = {
     querystring: Type.Object({
         startDate: Type.Optional(Type.String({ format: 'date' })),
         endDate: Type.Optional(Type.String({ format: 'date' })),
-        limit: Type.Optional(Type.Number({ minimum: 1, maximum: 100 })),
+        limit: PaginationLimitSchema(),
         cursor: Type.Optional(Type.String()),
     }),
     response: {

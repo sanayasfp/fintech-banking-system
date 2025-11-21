@@ -40,10 +40,14 @@ export function controllerFactory<
             throw new Error(`Method ${String(methodName)} not found on controller`);
         }
 
-        return (method as (req: FastifyRequest, rep: FastifyReply) => Promise<unknown>).call(
+        const result = await (method as (req: FastifyRequest, rep: FastifyReply) => Promise<unknown>).call(
             controller,
             request,
             reply,
         );
+
+        if (!reply.sent && result) {
+            return result;
+        }
     };
 }

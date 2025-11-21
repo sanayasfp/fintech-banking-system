@@ -28,6 +28,7 @@ export class AccountAggregate implements IAccountAggregate {
 
     private status: AccountStatus;
     private balance: Money;
+    private readonly transactions: Transaction[];
     private readonly newTransactions: Transaction[];
 
     private readonly clock: IClock;
@@ -40,7 +41,8 @@ export class AccountAggregate implements IAccountAggregate {
         this.status = props.status;
         this.createdAt = props.createdAt;
         this.balance = props.balance;
-        this.newTransactions = props.transactions;
+        this.transactions = props.transactions;
+        this.newTransactions = [];
         this.clock = props.clock;
         this.printer = props.printer;
     }
@@ -53,10 +55,10 @@ export class AccountAggregate implements IAccountAggregate {
             id: data.id ?? ulid(),
             userId: data.userId,
             accountNumber: data.accountNumber,
-            status: AccountStatus.ACTIVE,
+            status: data?.status ?? AccountStatus.ACTIVE,
             createdAt: data.clock.now(),
-            balance: Money.ZERO,
-            transactions: [],
+            balance: data.balance ?? Money.ZERO,
+            transactions: data.transactions ?? [],
             clock: data.clock,
             printer: data.printer,
         });
@@ -70,7 +72,6 @@ export class AccountAggregate implements IAccountAggregate {
         const transaction = new Transaction(this.clock.now(), amount, newBalance);
 
         this.balance = newBalance;
-
         this.newTransactions.push(transaction);
     }
 
@@ -92,7 +93,8 @@ export class AccountAggregate implements IAccountAggregate {
     }
 
     public printStatement(): void {
-        this.printer.print(this.newTransactions);
+        const allTransactions = [...this.transactions, ...this.newTransactions];
+        this.printer.print(allTransactions);
     }
 
     public close(): void {

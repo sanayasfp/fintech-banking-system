@@ -15,7 +15,7 @@ export class AuthController extends Controller<AuthControllerDeps> {
         this.authService = deps.authService;
     }
 
-    async register(request: FastifyRequest, reply: FastifyReply): Promise<void> {
+    async register(request: FastifyRequest, reply: FastifyReply): Promise<RegisterResponse> {
         const { phone, password, name } = request.body as RegisterRequest;
 
         const result = await this.authService.register(phone, password, name);
@@ -26,7 +26,8 @@ export class AuthController extends Controller<AuthControllerDeps> {
             token: result.token,
         };
 
-        return reply.code(201).send(response);
+        reply.code(201);
+        return response;
     }
 
     async login(request: FastifyRequest, _reply: FastifyReply): Promise<LoginResponse> {
