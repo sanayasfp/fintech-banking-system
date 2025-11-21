@@ -52,11 +52,7 @@ export const exportStatementSchema = {
         id: UlidType(),
     }),
     querystring: Type.Object({
-        format: Type.Union([
-            Type.Literal('json'),
-            Type.Literal('csv'),
-            Type.Literal('pdf'),
-        ]),
+        format: Type.String({ enum: ['pdf', 'csv', 'json'], default: 'csv' }),
     }),
     response: {
         200: Type.String({ description: 'Statement in requested format' }),
