@@ -14,7 +14,9 @@
     - [Layer Responsibilities](#layer-responsibilities)
   - [Installation](#installation)
   - [Usage](#usage)
+    - [Presentation Layers](#presentation-layers)
     - [Starting the REST API Server](#starting-the-rest-api-server)
+    - [Running the Prototype](#running-the-prototype)
     - [Running Tests](#running-tests)
     - [Building for Production](#building-for-production)
     - [Example Usage](#example-usage)
@@ -147,9 +149,20 @@ cd fintech-banking-system
 
 # Install dependencies
 npm install
+
+# Setup database (optional for web presentation)
+npx prisma generate
+npx prisma migrate dev
 ```
 
 ## Usage
+
+### Presentation Layers
+
+The application provides two presentation interfaces:
+
+1. **Console Prototype** - Simple demonstration using in-memory repository
+2. **Web API** - Full REST API with database persistence
 
 ### Starting the REST API Server
 
@@ -160,6 +173,15 @@ npm run dev
 # The server will start on http://localhost:3000
 # API Documentation available at http://localhost:3000/docs
 ```
+
+### Running the Prototype
+
+```bash
+# Run the console prototype demonstration
+npm run prototype
+```
+
+This will execute a demonstration of the banking system with console output showing deposits, withdrawals, statement printing, and error handling.
 
 ### Running Tests
 ```bash
@@ -337,11 +359,17 @@ The project uses several tools to maintain code quality:
 ### Available Scripts
 
 ```bash
-npm run build       # Compile TypeScript to JavaScript
-npm run dev         # Run development server with auto-reload
-npm test            # Run test suite
-npm run lint        # Run ESLint
-npm run format      # Format code with Prettier
+npm run build         # Compile TypeScript to JavaScript
+npm run dev           # Run REST API server with auto-reload
+npm run prototype     # Run console prototype demonstration
+npm test              # Run test suite
+npm test:watch        # Run tests in watch mode
+npm test:coverage     # Run tests with coverage report
+npm run lint          # Run ESLint
+npm run lint:fix      # Run ESLint with auto-fix
+npm run format        # Format code with Prettier
+npm run format:check  # Check code formatting
+npm run typecheck     # Type-check without emitting files
 ```
 
 ### Project Structure
@@ -364,16 +392,17 @@ src/
 │   └── errors/              # Infrastructure errors
 ├── presentation/            # User interface layer
 │   ├── printers/           # Output formatters (ConsoleStatementPrinter)
-│   ├── web/                # REST API with Fastify
-│   │   ├── controllers/   # HTTP request handlers
-│   │   ├── routes/        # API route definitions
-│   │   ├── schemas/       # TypeBox validation schemas
-│   │   ├── middleware/    # Authentication, error handling
-│   │   ├── config/        # Environment, logger configuration
-│   │   ├── core/          # DI container, Prisma client
-│   │   ├── types/         # TypeScript type definitions
-│   │   └── utils/         # Helper functions
-│   └── server.ts          # Application entry point
+│   ├── prototype.ts        # Console demonstration script
+│   ├── server.ts           # REST API entry point
+│   └── web/                # REST API with Fastify
+│       ├── controllers/   # HTTP request handlers
+│       ├── routes/        # API route definitions
+│       ├── schemas/       # TypeBox validation schemas
+│       ├── middleware/    # Authentication, error handling
+│       ├── config/        # Environment, logger configuration
+│       ├── core/          # DI container, Prisma client
+│       ├── types/         # TypeScript type definitions
+│       └── utils/         # Helper functions
 ├── __tests__/              # Test files
 └── prisma/                # Database schema and migrations
 ```
