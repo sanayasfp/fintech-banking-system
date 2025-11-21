@@ -5,7 +5,7 @@
 - [Fintech Banking System](#fintech-banking-system)
   - [Table of Contents](#table-of-contents)
   - [Overview](#overview)
-  - [✨ Features](#-features)
+  - [Features](#features)
     - [Core Banking Operations](#core-banking-operations)
     - [Business Rules](#business-rules)
     - [REST API](#rest-api)
@@ -45,7 +45,7 @@
 
 A banking system implementation that provides basic account management operations including deposits, withdrawals, and transaction statements. The system enforces business rules to maintain data integrity and financial accuracy.
 
-## ✨ Features
+## Features
 
 ### Core Banking Operations
 - Deposit funds to an account
